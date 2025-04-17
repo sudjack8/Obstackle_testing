@@ -1,106 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Game</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <style>
-    #game-screen, #user-info {
-      display: none;
-    }
-  </style>
+  <title>Firebase with Google Sign-In</title>
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+  <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
-  <!-- Login Area -->
-  <div id="login-area">
-    <h2>Login to Play</h2>
-    <button onclick="login()">Sign in with Google</button>
-  </div>
-
-  <!-- User Info -->
-  <div id="user-info">
-    <p id="welcome"></p>
-    <button onclick="logout()">Logout</button>
-  </div>
-
-  <!-- Game Area -->
-  <div id="game-screen">
-    <h2>Welcome to the Game!</h2>
-    <p>Game starts here...</p>
-    <!-- Your game content goes here -->
-  </div>
-
+  <h1>Sign In with Google</h1>
+  <button id="signInButton">Sign In</button>
   <script>
-    // Your Firebase configuration (replace with your values)
+    // Your Firebase config
     var firebaseConfig = {
-     apiKey: "AIzaSyBBLIK0EnQDP4GFRtSGsFJcyyEd06-bEdc",
-     authDomain: "obstackle-test.firebaseapp.com",
-     databaseURL: "https://obstackle-test-default-rtdb.asia-southeast1.firebasedatabase.app",
-     projectId: "obstackle-test",
-     storageBucket: "obstackle-test.firebasestorage.app",
-     messagingSenderId: "483914204227",
-     appId: "1:483914204227:web:1f4c6b314261ba37abc0f6"
+  apiKey: "AIzaSyBBLIK0EnQDP4GFRtSGsFJcyyEd06-bEdc",
+  authDomain: "obstackle-test.firebaseapp.com",
+  databaseURL: "https://obstackle-test-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "obstackle-test",
+  storageBucket: "obstackle-test.firebasestorage.app",
+  messagingSenderId: "483914204227",
+  appId: "1:483914204227:web:1f4c6b314261ba37abc0f6"
 };
-
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const provider = new firebase.auth.GoogleAuthProvider();
 
-    // Handle login
-    function login() {
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          console.log("User signed in");
-        })
-        .catch((error) => {
-          console.error("Login error:", error);
-        });
+    // Google Sign-In client ID (from Google Cloud Console)
+    var GOOGLE_CLIENT_ID = "483914204227-8rqj41vkua7vakhpm3mhjrstaajngie1.apps.googleusercontent.com";
+
+    // Function to sign in with Google
+    function signInWithGoogle() {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then(function (result) {
+        var token = result.credential.accessToken;
+        var user = result.user;
+        console.log("User signed in with Google: ", user);
+        console.log("Google Access Token: ", token);
+        // Sign in to Firebase
+        firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(token))
+          .then(function (response) {
+            console.log("User signed in to Firebase: ", response);
+          })
+          .catch(function (error) {
+            console.error("Error signing in to Firebase: ", error);
+          });
+      }).catch(function (error) {
+        console.error("Error signing in with Google: ", error);
+      });
     }
 
-    // Handle logout
-    function logout() {
-      auth.signOut()
-        .then(() => {
-          console.log("User signed out");
-        })
-        .catch((error) => {
-          console.error("Logout error:", error);
-        });
-    }
-
-    // Show game screen
-    function showGameScreen() {
-      document.getElementById('login-area').style.display = 'none';
-      document.getElementById('user-info').style.display = 'block';
-      document.getElementById('game-screen').style.display = 'block';
-    }
-
-    // Show login screen
-    function showLoginScreen() {
-      document.getElementById('login-area').style.display = 'block';
-      document.getElementById('user-info').style.display = 'none';
-      document.getElementById('game-screen').style.display = 'none';
-    }
-
-    // Show user info
-    function displayUserInfo(user) {
-      const welcome = document.getElementById('welcome');
-      welcome.textContent = `Welcome, ${user.displayName}`;
-    }
-
-    // Set up auth listener
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        displayUserInfo(user);
-        showGameScreen();
-      } else {
-        showLoginScreen();
-      }
-    });
-
+    // Attach the sign-in function to the button
+    document.getElementById("signInButton").addEventListener("click", signInWithGoogle);
   </script>
 </body>
 </html>
