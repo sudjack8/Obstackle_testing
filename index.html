@@ -36,6 +36,8 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
+      provider.addScope('email');
+      provider.addScope('profile');
       
 
       const signInBtn = document.getElementById("sign-in");
@@ -44,7 +46,7 @@
 
       signInBtn.addEventListener("click", async () => {
         try {
-          const result = await signInWithRedirect(auth, provider);
+          const result = await signInWithPopup(auth, provider);
           const user = result.user;
           onAuthStateChanged(auth, (user) => {
           if (user) {
