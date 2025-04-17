@@ -1,42 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Click Game with Google Sign-In</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Game</title>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <style>
-    #game-screen, #user-info { display: none; }
-    button { padding: 10px 20px; font-size: 16px; margin: 5px; }
+    #game-screen, #user-info {
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <!-- Login Area -->
   <div id="login-area">
-    <h2>Welcome to the Game</h2>
-    <button onclick="login()">Login with Google</button>
+    <h2>Login to Play</h2>
+    <button onclick="login()">Sign in with Google</button>
   </div>
 
+  <!-- User Info -->
   <div id="user-info">
-    <img id="user-photo" width="50" style="border-radius: 50%;"><br>
-    <strong id="user-name"></strong><br>
-    <span id="user-email"></span><br>
+    <p id="welcome"></p>
     <button onclick="logout()">Logout</button>
   </div>
 
+  <!-- Game Area -->
   <div id="game-screen">
-    <h1>Click Game</h1>
-    <p>Score: <span id="score">0</span></p>
-    <button onclick="increaseScore()">Click me!</button>
+    <h2>Welcome to the Game!</h2>
+    <p>Game starts here...</p>
+    <!-- Your game content goes here -->
   </div>
 
   <script>
-    // Your Firebase config here
+    // Your Firebase configuration (replace with your values)
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
       projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
       appId: "YOUR_APP_ID"
     };
 
@@ -45,56 +46,49 @@
     const auth = firebase.auth();
     const provider = new firebase.auth.GoogleAuthProvider();
 
-    // Game logic
-    let score = 0;
-    function increaseScore() {
-      score++;
-      document.getElementById('score').textContent = score;
+    // Handle login
+    function login() {
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          console.log("User signed in");
+        })
+        .catch((error) => {
+          console.error("Login error:", error);
+        });
     }
 
-    // Show/hide screens
+    // Handle logout
+    function logout() {
+      auth.signOut()
+        .then(() => {
+          console.log("User signed out");
+        })
+        .catch((error) => {
+          console.error("Logout error:", error);
+        });
+    }
+
+    // Show game screen
     function showGameScreen() {
       document.getElementById('login-area').style.display = 'none';
       document.getElementById('user-info').style.display = 'block';
       document.getElementById('game-screen').style.display = 'block';
     }
 
+    // Show login screen
     function showLoginScreen() {
       document.getElementById('login-area').style.display = 'block';
       document.getElementById('user-info').style.display = 'none';
       document.getElementById('game-screen').style.display = 'none';
     }
 
-    // Login
-    function login() {
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          displayUserInfo(user);
-          showGameScreen();
-        })
-        .catch((error) => {
-          console.error("Login Error:", error);
-        });
-    }
-
-    // Logout
-    function logout() {
-      auth.signOut().then(() => {
-        showLoginScreen();
-        score = 0;
-        document.getElementById('score').textContent = score;
-      });
-    }
-
     // Show user info
     function displayUserInfo(user) {
-      document.getElementById('user-name').textContent = user.displayName;
-      document.getElementById('user-email').textContent = user.email;
-      document.getElementById('user-photo').src = user.photoURL;
+      const welcome = document.getElementById('welcome');
+      welcome.textContent = `Welcome, ${user.displayName}`;
     }
 
-    // Stay signed in if page reloads
+    // Set up auth listener
     auth.onAuthStateChanged((user) => {
       if (user) {
         displayUserInfo(user);
@@ -103,6 +97,7 @@
         showLoginScreen();
       }
     });
+
   </script>
 </body>
 </html>
