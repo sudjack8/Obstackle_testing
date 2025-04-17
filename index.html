@@ -576,18 +576,20 @@ canvas.style.top = `${offsetY}px`;
 	
   // Login function
     function login(event) {
-  event.preventDefault(); // This stops the page from refreshing
-
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      const user = result.user;
-      displayUserInfo(user);
-      showGameScreen();
-    })
-    .catch((error) => {
-      console.error("Login Error:", error);
-    });
+  event.preventDefault();
+  auth.signInWithRedirect(provider);
 }
+
+  auth.getRedirectResult()
+  .then((result) => {
+    if (result.user) {
+      displayUserInfo(result.user);
+      showGameScreen();
+    }
+  })
+  .catch((error) => {
+    console.error("Redirect Sign-In Error:", error);
+  });
 
     // Logout function
     function logout() {
