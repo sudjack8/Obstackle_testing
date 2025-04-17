@@ -36,8 +36,7 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
-      provider.addScope('email');
-      provider.addScope('profile');
+      
 
       const signInBtn = document.getElementById("sign-in");
       const signOutBtn = document.getElementById("sign-out");
@@ -49,6 +48,7 @@
           const user = result.user;
           onAuthStateChanged(auth, (user) => {
           if (user) {
+           window.location.href = "game.html";
           console.log("Display Name:", user.displayName);
           console.log("Email:", user.email);
           console.log("UID:", user.uid);
