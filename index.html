@@ -17,13 +17,14 @@
     import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+    apiKey: "AIzaSyA8L3gVXfw63UtpIHWLJOdqXxrMGM0lSZg",
+    authDomain: "obstackledb.firebaseapp.com",
+    databaseURL: "https://obstackledb-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "obstackledb",
+    storageBucket: "obstackledb.firebasestorage.app",
+    messagingSenderId: "741143724512",
+    appId: "1:741143724512:web:d99efe0e8ec107f289eb85"
+  };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
