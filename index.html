@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+
+<!-- Firebase Authentication SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
+<!-- Firebase Firestore SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script> -->
+
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+  apiKey: "AIzaSyBBLIK0EnQDP4GFRtSGsFJcyyEd06-bEdc",
+  authDomain: "obstackle-test.firebaseapp.com",
+  databaseURL: "https://obstackle-test-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "obstackle-test",
+  storageBucket: "obstackle-test.firebasestorage.app",
+  messagingSenderId: "483914204227",
+  appId: "1:483914204227:web:1f4c6b314261ba37abc0f6"
+};
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  const db = firebase.firestore();
+  const database = firebase.database();
+  
+</script>
+	
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Obstackle by Impossib1e</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      overflow: hidden;
+      touch-action: manipulation;
+      font-family: monospace;
+			 user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+    }
+
+    #gameCanvas {
+      background: #222;
+      display: none;
+			 user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+    }
+    
+   #leaderboard {
+   color: #fff;
+   text-align: center;
+   margin-top: 30px;
+   display: block; /* force it to be visible */
+   }
+
+   #topScores li {
+   margin: 5px 0;
+}
+
+    #scoreBox {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #000;
+      color: #fff;
+      padding: 6px 12px;
+      font-size: 18px;
+      border-radius: 6px;
+      z-index: 20;
+      display: none;
+			 user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+    }
+		
+		#controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  padding: 0 10px;
+  box-sizing: border-box;
+	user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+}
+
+.rectBtn {
+  flex: 1;
+  height: 50px;
+  margin: 0 5px;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 10px;
+	user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+}
+
+    #homeScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+			user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+    }
+
+    #gameOverScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+			user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+    }
+
+    #homeScreen button, #gameOverScreen button {
+      padding: 12px 24px;
+      margin-top: 20px;
+      font-size: 18px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 6px;
+			user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+    }
+
+    #gameOverMessage {
+      font-size: 24px;
+      margin-bottom: 10px;
+			user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+    }
+
+    .unselectable {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+  </style>
+</head>
+<body>
+	
+	<!-- Auth Container -->
+<div id="auth-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: Arial, sans-serif;">
+
+  <!-- Login Box -->
+  <div id="show-login">Login</div>
+  <div id="login-box" style="border: 1px solid #ccc; padding: 30px; border-radius: 10px; width: 300px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #d3d3d3; ">Login to Obstackle</h2>
+    <input type="text" id="login-username" placeholder="Username" style="width: 100%; margin: 10px 0; padding: 10px;">
+    <input type="password" id="login-password" placeholder="Password" style="width: 100%; margin: 10px 0; padding: 10px;">
+    <button onclick="login()" style="width: 100%; padding: 10px; background-color: #4285f4; color: white; border: none; border-radius: 5px;">Login</button>
+    <p style="margin-top: 15px; text-align: center; color: #d3d3d3;">
+      Don’t have an account? 
+      <span style="color: #4285f4; cursor: pointer;" onclick="toggleAuth()">Sign up here</span>
+    </p>
+    <p id="auth-message" style="color: red; text-align: center;"></p>
+  </div>
+
+  <!-- Signup Box (Hidden Initially) -->
+  <div id="show-signup">Login</div>
+  <div id="signup-box" style="display: none; border: 1px solid #ccc; padding: 30px; border-radius: 10px; width: 300px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #d3d3d3;">Create Account</h2>
+    <input type="text" id="signup-username" placeholder="Username" style="width: 100%; margin: 10px 0; padding: 10px;">
+    <input type="password" id="signup-password" placeholder="Password" style="width: 100%; margin: 10px 0; padding: 10px;">
+    <button onclick="signUp()" style="width: 100%; padding: 10px; background-color: #34a853; color: white; border: none; border-radius: 5px;">Sign Up</button>
+    <p style="margin-top: 15px; text-align: center;">
+      Already have an account? 
+      <span style="color: #34a853; cursor: pointer;" onclick="toggleAuth()">Login here</span>
+    </p>
+    <p id="signup-message" style="color: red; text-align: center;"></p>
+  </div>
+
+</div>
+
+	
+<!-- Game Container -->
+<div id="game-container" style="display: none;">
+  <!-- Your existing game.html content starts here -->
+	
+  <div id="homeScreen">
+    <h1>Obstackle</h1>
+    <button onclick="startGame()">Start Game</button>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="gameOverScreen">
+    <div id="gameOverMessage">Game Over!</div>
+    <div id="finalScore">Score: 0</div>
+    <div id="highestScore">Highest Score: 0</div>
+    <button onclick="restartGame()">Retry</button>
+    <button onclick="goHome()">Home</button>
+  </div>
+
+  <div id="scoreBox">Score: 0</div>
+
+  <div id="controls">
+  <button id="leftBtn" class="rectBtn">←</button>
+  <button id="shrinkBtn" class="rectBtn">o</button>
+  <button id="rightBtn" class="rectBtn">→</button>
+  </div>
+  </div>
+  <div id="leaderboard" style="margin-top: 30px; color: #fff; text-align: center;">
+  <h3>Top 5 Players</h3>
+  <ul id="topScores" style="list-style: none; padding: 0; font-size: 18px;"></ul>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const shrinkBtn = document.getElementById('shrinkBtn');
+    const leftBtn = document.getElementById('leftBtn');
+    const rightBtn = document.getElementById('rightBtn');
+    const scoreBox = document.getElementById('scoreBox');
+    const homeScreen = document.getElementById('homeScreen');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const finalScore = document.getElementById('finalScore');
+    //const highestScore = document.getElementById('highestScore');
+    const gameOverMessage = document.getElementById('gameOverMessage');
+		
+
+    let circleX, initialRadius, radius;
+    let growSpeed, growSpeed2, shrinkSpeed, shrinkSpeed2, moveSpeed;
+    let shrink, moveLeft, moveRight;
+    let obstacleHeight, spaceBetweenObstacles, obstacles;
+    let scrollSpeed, speed, speedIncrement, worldY, offsetY, score, newobs;
+    let gameRunning;
+    let lastSpawnTime, spawnInterval;
+		let minAllowedRadius, addRad;
+    let highestScoreVar;
+    
+    // Get actual screen size
+let screenWidth = window.innerWidth;
+let screenHeight = window.innerHeight;
+
+// Declare target game area
+let gameWidth, gameHeight;
+
+if (screenHeight / screenWidth > 2) {
+    // Screen is taller than 2:1, crop height
+    gameWidth = screenWidth;
+    gameHeight = gameWidth * 2;
+    offsetY = (screenHeight - gameHeight) / 2;
+} else {
+    // Screen is wider than 2:1, crop width
+    gameHeight = screenHeight;
+    gameWidth = gameHeight / 2;
+    offsetX = (screenWidth - gameWidth) / 2;
+}
+
+// Set canvas size
+canvas.width = gameWidth;
+canvas.height = gameHeight;
+
+// Center canvas
+canvas.style.position = 'absolute';
+canvas.style.left = `${offsetX}px`;
+canvas.style.top = `${offsetY}px`;
+
+    let width = canvas.width;
+    let height = canvas.height * 0.9;
+
+
+
+    function initializeGame() {
+      circleX = width / 2;
+      initialRadius = width * 0.1;
+      radius = initialRadius;
+      growSpeed = 0.005;
+      growSpeed2 = growSpeed * 2;
+      shrinkSpeed = growSpeed * 2;
+      shrinkSpeed2 = growSpeed * 4;
+			minAllowedRadius = initialRadius;
+      addRad = 0.02;
+      moveSpeed = 4;
+      shrink = false;
+      moveLeft = false;
+      moveRight = false;
+
+      obstacleHeight = height * 0.04;
+      spaceBetweenObstacles = height / 3;
+      obstacles = [];
+
+      scrollSpeed = 1.5;
+      speed = 2;
+      speedIncrement = 0.001;
+      worldY = 0;
+      offsetY = 0;
+      score = 0;
+      newobs = 0;
+      gameRunning = true;
+
+      lastSpawnTime = Date.now();
+      spawnInterval = 400;
+    }
+
+    function startGame() {
+      homeScreen.style.display = "none";
+      canvas.style.display = "block";
+      document.getElementById('controls').style.display = "flex";
+      scoreBox.style.display = "block";
+      gameOverScreen.style.display = "none";
+      initializeGame();
+			
+		
+      loop();
+    }
+
+    function restartGame() {
+      gameOverScreen.style.display = "none";
+      canvas.style.display = "block";
+      document.getElementById('controls').style.display = "flex";
+      scoreBox.style.display = "block";
+      initializeGame();
+		
+      loop();
+    }
+
+    function goHome() {
+      gameOverScreen.style.display = "none";
+      canvas.style.display = "none";
+      loadTopScores();
+      document.getElementById('controls').style.display = "none";
+      scoreBox.style.display = "none";
+      homeScreen.style.display = "flex";
+      
+    }
+
+    function generateObstacle(y) {
+      const side = Math.random() < 0.5 ? 'left' : 'right';
+      const minWidth = width / 4;
+      const maxWidth = width / 2;
+      const obsWidth = Math.random() * (maxWidth - minWidth) + minWidth;
+
+      obstacles.push({
+        x: side === 'left' ? 0 : width - obsWidth,
+        y: y,
+        width: obsWidth,
+        height: obstacleHeight
+      });
+    }
+
+    function update() {
+      if (!gameRunning) return;
+
+      const intRad = width * 0.1;
+      worldY += scrollSpeed;
+      speed += speedIncrement;
+      offsetY += speed;
+
+      if (shrink) {
+        if (score < 50) {
+          radius -= shrinkSpeed;
+          if (radius <= initialRadius) endGame("You shrank too much!");
+        } else if (score < 100) {
+          radius -= shrinkSpeed2;
+          if (radius < initialRadius) radius = initialRadius;
+        } 
+				else {
+          radius -= shrinkSpeed2;
+          
+					const halfIntRad = width * 0.1 * 0.5;
+  if (minAllowedRadius > halfIntRad) {
+    minAllowedRadius -= addRad;
+    if (minAllowedRadius < halfIntRad) minAllowedRadius = halfIntRad;
+  }
+
+  initialRadius -= shrinkSpeed2;
+  if (radius < minAllowedRadius) {
+    radius = minAllowedRadius;
+    initialRadius = minAllowedRadius;
+  }
+}
+					
+      } else {
+        radius += growSpeed;
+      }
+
+      if (moveLeft) circleX -= moveSpeed;
+      if (moveRight) circleX += moveSpeed;
+      if (circleX - radius < 0) circleX = radius;
+      if (circleX + radius > width) circleX = width - radius;
+
+      const now = Date.now();
+      if (now - lastSpawnTime >= spawnInterval) {
+        generateObstacle(newobs);
+        newobs -= spaceBetweenObstacles;
+        lastSpawnTime = now;
+      }
+
+      const circleY = height - radius * 1.4 - 20;
+      for (let obs of obstacles) {
+        const obsY = obs.y + offsetY;
+        const obsTop = obsY;
+        const obsBottom = obsY + obstacleHeight;
+
+        if (obsBottom > circleY - radius && obsTop < circleY + radius) {
+          const dy = Math.min(Math.abs(obsTop - circleY), Math.abs(obsBottom - circleY));
+          if (dy <= radius) {
+            const dx = Math.sqrt(radius * radius - dy * dy);
+            const leftLimit = circleX - dx;
+            const rightLimit = circleX + dx;
+
+            if (rightLimit > obs.x && leftLimit < obs.x + obs.width) {
+              endGame("You hit an obstacle!");
+            }
+          }
+        }
+
+        if (!obs.passed && obsY > circleY + radius) {
+          obs.passed = true;
+          score++;
+          scoreBox.textContent = `Score: ${score}`;
+          
+          // Remove obstacles that are off-screen and already passed
+				obstacles	= obstacles.filter(obs => (obs.y + offsetY + obstacleHeight) <= circleY - radius || !obs.passed);
+          
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = 'blue';
+      for (let obs of obstacles) {
+        const obsY = obs.y + offsetY;
+        if (obsY + obstacleHeight > 0 && obsY < height) {
+          ctx.fillRect(obs.x, obsY, obs.width, obs.height);
+        }
+      }
+
+      const circleY = height - radius * 1.4 - 20;
+      ctx.beginPath();
+      ctx.arc(circleX, circleY, radius, 0, Math.PI * 2);
+			if (score < 100) {
+      ctx.fillStyle = 'yellow';
+		  }
+			else {
+			ctx.fillStyle = 'red';	
+			}
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.arc(circleX, circleY, initialRadius, 0, Math.PI * 2);
+      ctx.fillStyle = 'red';
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    function loop() {
+      scoreBox.textContent = `Score: ${score}`;
+      update();
+      draw();
+      if (gameRunning) requestAnimationFrame(loop);
+    }
+    
+   function saveScore(score) {
+    highestScoreVar = 0;
+  // Ensure user is authenticated before proceeding
+  const user = firebase.auth().currentUser;
+
+  if (!user) {
+    console.warn("User is not authenticated yet.");
+    return null;
+  }
+
+  const uid = user.uid;
+  const username = user.displayName || "Anonymous";
+  const userScoreRef = firebase.database().ref("scores/" + uid);
+
+  userScoreRef.once("value")
+    .then(snapshot => {
+      const currentHighScore = snapshot.val()?.highScore || 0;
+      highestScoreVar = currentHighScore;
+
+      console.log("Current high score:", currentHighScore, "New score:", score);
+
+      if (score > currentHighScore) {
+        highestScoreVar = score;
+        return userScoreRef.set({
+          highScore: score,
+          username: username
+        });
+        
+      } else {
+        console.log("Score is not higher. No update needed.");
+        return null; // still return a promise
+      }
+    })
+    .then(() => {
+      console.log("High score check complete.");
+    })
+    .catch(error => {
+      console.error("Error accessing/updating score:", error);
+    return null;
+    });
+}
+
+    function endGame(message) {
+  gameRunning = false;
+  
+  saveScore(score);
+  
+  finalScore.textContent = "Score: " + score;
+  const user2 = firebase.auth().currentUser;
+  if (!user2) {
+    console.warn("User is not authenticated yet.");
+    return null;
+  }
+  const uid2 = user2.uid;
+  const userScoreRef2 = firebase.database().ref("scores/" + uid2);
+  userScoreRef2.once("value")
+    .then(snapshot => {
+      const currentHighScore2 = snapshot.val()?.highScore || 0;
+      highestScoreVar = currentHighScore2;
+
+      // const serverHighScore = await saveScore(score); // If used, make the function async
+
+      if (score > highestScoreVar) {
+        highestScoreVar = score;
+      }
+
+      highestScore.textContent = "Highest Score: " + highestScoreVar;
+
+      gameOverMessage.textContent = message;
+      gameOverScreen.style.display = "flex";
+    }); // <-- Closing .then
+} // <-- Closing endGame function
+
+    shrinkBtn.addEventListener('touchstart', e => { e.preventDefault(); shrink = true; });
+    shrinkBtn.addEventListener('touchend', e => { e.preventDefault(); shrink = false; });
+    leftBtn.addEventListener('touchstart', e => { e.preventDefault(); moveLeft = true; });
+    leftBtn.addEventListener('touchend', e => { e.preventDefault(); moveLeft = false; });
+    rightBtn.addEventListener('touchstart', e => { e.preventDefault(); moveRight = true; });
+    rightBtn.addEventListener('touchend', e => { e.preventDefault(); moveRight = false; });
+  </script>
+	
+	<script>
+  function toggleAuth() {
+    const loginBox = document.getElementById('login-box');
+    const signupBox = document.getElementById('signup-box');
+
+    if (loginBox.style.display === 'none') {
+      loginBox.style.display = 'block';
+      signupBox.style.display = 'none';
+    } else {
+      loginBox.style.display = 'none';
+      signupBox.style.display = 'block';
+    }
+  }
+</script>
+	
+	<script>
+  document.getElementById('show-signup').addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById('login-box').style.display = 'none';
+    document.getElementById('signup-box').style.display = 'block';
+  });
+
+  document.getElementById('show-login').addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById('signup-box').style.display = 'none';
+    document.getElementById('login-box').style.display = 'block';
+  });
+</script>
+	
+ <script>
+
+  // SIGN UP FUNCTION
+  function signUp() {
+    const username = document.getElementById("signup-username").value.trim();
+    const password = document.getElementById("signup-password").value;
+
+    if (!username || !password) {
+      document.getElementById("signup-message").innerText = "Please fill in all fields.";
+      return;
+    }
+
+    // Use email format by appending domain to username
+    const email = username + "@obstackle.com";
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Signed up successfully
+        
+        localStorage.setItem("obstackle-username", username);
+        firebase.auth().currentUser.updateProfile({
+        displayName: username
+});
+        document.getElementById("signup-message").innerText = "";
+        showGameScreen();
+      })
+      .catch((error) => {
+        document.getElementById("signup-message").innerText = error.message;
+      });
+  }
+  
+  // LOGIN FUNCTION
+  function login() {
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value;
+
+    if (!username || !password) {
+      document.getElementById("auth-message").innerText = "Please fill in all fields.";
+      return;
+    }
+
+    const email = username + "@obstackle.com";
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Logged in successfully
+        localStorage.setItem("obstackle-username", username);
+        firebase.auth().currentUser.updateProfile({
+        displayName: username
+});
+        document.getElementById("auth-message").innerText = "";
+        showGameScreen();
+      })
+      .catch((error) => {
+        document.getElementById("auth-message").innerText = error.message;
+      });
+  }
+
+  // Show Game Screen and hide auth screen
+  function showGameScreen() {
+    document.getElementById("auth-container").style.display = "none";
+    document.getElementById("game-container").style.display = "block";
+  }
+  
+  function loadTopScores() {
+  const topScoresRef = firebase.database().ref("scores");
+
+  topScoresRef.orderByChild("highScore").limitToLast(1).once("value", snapshot => {
+    const scores = [];
+
+    snapshot.forEach(child => {
+      scores.push(child.val());
+    });
+
+    // Firebase returns ascending, so we reverse to show top first
+    scores.sort((a, b) => b.highScore - a.highScore);
+
+    const topScoresList = document.getElementById("topScores");
+    topScoresList.innerHTML = ""; // Clear list
+
+    scores.forEach((entry, index) => {
+      const li = document.createElement("li");
+      li.textContent = ${index + 1}. ${entry.username || "Anonymous"} - ${entry.highScore};
+      topScoresList.appendChild(li);
+    });
+  });
+}
+  
+</script>
+
+</body>
+</html>
