@@ -1,62 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Google Sign-In with Firebase</title>
-  <script type="module" src="app.js"></script>
-</head>
-<body>
-  <h1>Google Sign-In Example</h1>
-  <button id="sign-in">Sign In with Google</button>
-  <button id="sign-out" hidden>Sign Out</button>
-  <p id="user-info"></p>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Firebase Google Sign-In</title>
+  </head>
+  <body>
+    <h2>Firebase Google Sign-In</h2>
+    <button id="sign-in">Sign In with Google</button>
+    <button id="sign-out" hidden>Sign Out</button>
+    <p id="user-info"></p>
 
-  <!-- Firebase v9.6.10 SDKs -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    <script type="module">
+      // Firebase SDK v9.6.10
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signOut,
+        onAuthStateChanged
+      } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
-    const firebaseConfig = {
-    apiKey: "AIzaSyA8L3gVXfw63UtpIHWLJOdqXxrMGM0lSZg",
-    authDomain: "obstackledb.firebaseapp.com",
-    databaseURL: "https://obstackledb-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "obstackledb",
-    storageBucket: "obstackledb.firebasestorage.app",
-    messagingSenderId: "741143724512",
-    appId: "1:741143724512:web:d99efe0e8ec107f289eb85"
-  };
+      // Replace with your Firebase config
+      const firebaseConfig = {
+      apiKey: "AIzaSyBBLIK0EnQDP4GFRtSGsFJcyyEd06-bEdc",
+      authDomain: "obstackle-test.firebaseapp.com",
+      databaseURL: "https://obstackle-test-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "obstackle-test",
+      storageBucket: "obstackle-test.firebasestorage.app",
+      messagingSenderId: "483914204227",
+      appId: "1:483914204227:web:1f4c6b314261ba37abc0f6"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
 
-    const signInBtn = document.getElementById('sign-in');
-    const signOutBtn = document.getElementById('sign-out');
-    const userInfo = document.getElementById('user-info');
+      const signInBtn = document.getElementById("sign-in");
+      const signOutBtn = document.getElementById("sign-out");
+      const userInfo = document.getElementById("user-info");
 
-    signInBtn.addEventListener('click', async () => {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (error) {
-        console.error(error);
-      }
-    });
+      signInBtn.addEventListener("click", async () => {
+        try {
+          const result = await signInWithPopup(auth, provider);
+          const user = result.user;
+          console.log("Signed in as:", user.displayName);
+        } catch (error) {
+          console.error("Sign-in error:", error);
+        }
+      });
 
-    signOutBtn.addEventListener('click', async () => {
-      await signOut(auth);
-    });
+      signOutBtn.addEventListener("click", () => {
+        signOut(auth);
+      });
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userInfo.textContent = `Hello, ${user.displayName}`;
-        signInBtn.hidden = true;
-        signOutBtn.hidden = false;
-      } else {
-        userInfo.textContent = '';
-        signInBtn.hidden = false;
-        signOutBtn.hidden = true;
-      }
-    });
-  </script>
-</body>
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userInfo.textContent = `Signed in as: ${user.displayName} (${user.email})`;
+          signInBtn.hidden = true;
+          signOutBtn.hidden = false;
+        } else {
+          userInfo.textContent = "Not signed in.";
+          signInBtn.hidden = false;
+          signOutBtn.hidden = true;
+        }
+      });
+    </script>
+  </body>
 </html>
