@@ -206,8 +206,9 @@
   </div>
 
   <div id="login-area">
-    <button onclick="login()">Login with Google</button>
-  </div>
+  <button onclick="login(event)">Login with Google</button>
+</div>
+  
 </div>
 
 	
@@ -574,16 +575,19 @@ canvas.style.top = `${offsetY}px`;
     rightBtn.addEventListener('touchend', e => { e.preventDefault(); moveRight = false; });
 	
   // Login function
-    function login() {
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          displayUserInfo(user);
-        })
-        .catch((error) => {
-          console.error("Login Error:", error);
-        });
-    }
+    function login(event) {
+  event.preventDefault(); // This stops the page from refreshing
+
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      const user = result.user;
+      displayUserInfo(user);
+      showGameScreen();
+    })
+    .catch((error) => {
+      console.error("Login Error:", error);
+    });
+}
 
     // Logout function
     function logout() {
