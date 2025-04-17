@@ -36,6 +36,8 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
+      provider.addScope('email');
+      provider.addScope('profile');
 
       const signInBtn = document.getElementById("sign-in");
       const signOutBtn = document.getElementById("sign-out");
@@ -45,6 +47,14 @@
         try {
           const result = await signInWithRedirect(auth, provider);
           const user = result.user;
+          onAuthStateChanged(auth, (user) => {
+          if (user) {
+          console.log("Display Name:", user.displayName);
+          console.log("Email:", user.email);
+          console.log("UID:", user.uid);
+          console.log("Photo URL:", user.photoURL);
+  }
+});
           console.log("Signed in as:", user.displayName);
         } catch (error) {
           console.error("Sign-in error:", error);
