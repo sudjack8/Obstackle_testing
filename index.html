@@ -1,29 +1,17 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Firebase Google Sign-In</title>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
+  <title>Firebase with Google Sign-In</title>
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+  <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
-  <h2>Firebase Google Sign-In Example</h2>
-
-  <div id="user-info" style="display:none;">
-    <p id="user-name"></p>
-    <p id="user-email"></p>
-    <img id="user-photo" src="" alt="User Photo" width="100" />
-    <br />
-    <button onclick="logout()">Logout</button>
-  </div>
-
-  <div id="login-area">
-    <button onclick="login()">Login with Google</button>
-  </div>
-
+  <h1>Sign In with Google</h1>
+  <button id="signInButton">Sign In</button>
   <script>
-    // Replace this config with yours from Firebase Console > Project Settings
-    const firebaseConfig = {
+    // Your Firebase config
+    var firebaseConfig = {
   apiKey: "AIzaSyBBLIK0EnQDP4GFRtSGsFJcyyEd06-bEdc",
   authDomain: "obstackle-test.firebaseapp.com",
   databaseURL: "https://obstackle-test-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -32,51 +20,34 @@
   messagingSenderId: "483914204227",
   appId: "1:483914204227:web:1f4c6b314261ba37abc0f6"
 };
-
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const provider = new firebase.auth.GoogleAuthProvider();
 
-    // Login function
-    function login() {
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          displayUserInfo(user);
-        })
-        .catch((error) => {
-          console.error("Login Error:", error);
-        });
+    // Google Sign-In client ID (from Google Cloud Console)
+    var GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID";
+
+    // Function to sign in with Google
+    function signInWithGoogle() {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then(function (result) {
+        var token = result.credential.accessToken;
+        var user = result.user;
+        console.log("User signed in with Google: ", user);
+        console.log("Google Access Token: ", token);
+        // Sign in to Firebase
+        firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(token))
+          .then(function (response) {
+            console.log("User signed in to Firebase: ", response);
+          })
+          .catch(function (error) {
+            console.error("Error signing in to Firebase: ", error);
+          });
+      }).catch(function (error) {
+        console.error("Error signing in with Google: ", error);
+      });
     }
 
-    // Logout function
-    function logout() {
-      auth.signOut()
-        .then(() => {
-          document.getElementById('user-info').style.display = 'none';
-          document.getElementById('login-area').style.display = 'block';
-        });
-    }
-
-    // Display user info
-    function displayUserInfo(user) {
-      document.getElementById('user-name').textContent = "Name: " + user.displayName;
-      document.getElementById('user-email').textContent = "Email: " + user.email;
-      document.getElementById('user-photo').src = user.photoURL;
-      document.getElementById('user-info').style.display = 'block';
-      document.getElementById('login-area').style.display = 'none';
-    }
-
-    // Check login state on page load
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        displayUserInfo(user);
-      } else {
-        document.getElementById('user-info').style.display = 'none';
-        document.getElementById('login-area').style.display = 'block';
-      }
-    });
+    // Attach the sign-in function to the button
+    document.getElementById("signInButton").addEventListener("click", signInWithGoogle);
   </script>
 </body>
 </html>
