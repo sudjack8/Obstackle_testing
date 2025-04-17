@@ -37,7 +37,7 @@
         firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(token))
           .then(function (response) {
             console.log("User signed in to Firebase: ", response);
-            window.location.href = "game.html";
+            //window.location.href = "game.html";
           })
           .catch(function (error) {
             console.error("Error signing in to Firebase: ", error);
