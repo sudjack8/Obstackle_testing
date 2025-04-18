@@ -28,8 +28,6 @@
   
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
- 
-  const db = getDatabase();
   
   //const db = firebase.firestore();
   const database = firebase.database();
@@ -267,7 +265,7 @@
     let growSpeed, growSpeed2, shrinkSpeed, shrinkSpeed2, moveSpeed;
     let shrink, moveLeft, moveRight;
     let obstacleHeight, spaceBetweenObstacles, obstacles;
-    let scrollSpeed, speed, speedIncrement, worldY, offsetY, score, newobs;
+    let scrollSpeed, speed, speedIncrement, worldY, offsetX = 0, offsetY = 0, score, newobs;
     let gameRunning;
     let lastSpawnTime, spawnInterval;
 		let minAllowedRadius, addRad;
@@ -610,9 +608,6 @@ scoresRef.once("value")
   .catch(error => {
     console.error("Error fetching leaderboard:", error);
   });
-
-// Call on page load
-window.addEventListener('load', loadLeaderboard);
 
 // Call on page load
 window.addEventListener('load', loadLeaderboard);
