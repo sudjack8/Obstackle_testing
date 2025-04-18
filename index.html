@@ -667,13 +667,13 @@ window.startGame = startGame;
 
     shrinkBtn.addEventListener('touchstart', e => { vibrateTouch();
  e.preventDefault(); shrink = true; });
-    //shrinkBtn.addEventListener('touchend', e => { e.preventDefault(); shrink = false; });
+    shrinkBtn.addEventListener('touchend', e => { e.preventDefault(); shrink = false; });
     leftBtn.addEventListener('touchstart', e => { vibrateTouch();
  e.preventDefault(); moveLeft = true; });
-    //leftBtn.addEventListener('touchend', e => { e.preventDefault(); moveLeft = false; });
+    leftBtn.addEventListener('touchend', e => { e.preventDefault(); moveLeft = false; });
     rightBtn.addEventListener('touchstart', e => { vibrateTouch();
  e.preventDefault(); moveRight = true; });
-    //rightBtn.addEventListener('touchend', e => { e.preventDefault(); moveRight = false; });
+    rightBtn.addEventListener('touchend', e => { e.preventDefault(); moveRight = false; });
   </script>
 	
 <script>
