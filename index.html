@@ -624,7 +624,7 @@ scoresRef.once("value")
     // Create leaderboard HTML
     let leaderboardHTML = "<h3>Top 5 Players</h3><ol>";
     sortedPlayers.forEach(player => {
-      leaderboardHTML += `<li>${player.username} - ${player.highScore}</li>`;
+      leaderboardHTML += `<li>${player.username}: ${player.highScore}</li>`;
     });
     leaderboardHTML += "</ol>";
 
