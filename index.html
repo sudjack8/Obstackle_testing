@@ -96,19 +96,30 @@
        -ms-user-select: none;
 }
 
-.touch-wrapper {
-  position: relative;
-  display: inline-block;
-  padding: 20px; /* Expands hit area */
-  margin: -20px; /* Keeps visual spacing unchanged */
-}
-
-.touch-wrapper button {
-  position: relative;
-  z-index: 1;
-}
 
 .rectBtn {
+  flex: 1;
+  height: 50px;
+  margin: 0 5px;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 10px;
+	user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+}
+
+#leftBtn, #rightBtn {
+  position: relative; /* Needed for pseudo-element positioning */
+}
+
+#leftBtn::before,
+#rightBtn::before
+ {
   flex: 1;
   height: 50px;
   margin: 0 5px;
@@ -283,9 +294,9 @@
   <div id="scoreBox">Score: 0</div>
 
   <div id="controls">
-  <button class="touch-wrapper" id="leftBtn" class="rectBtn">←</button>
+  <button id="leftBtn">←</button>
   <button id="shrinkBtn" class="rectBtn">o</button>
-  <button class="touch-wrapper" id="rightBtn" class="rectBtn">→</button>
+  <button id="rightBtn">→</button>
   </div>
   </div>
 
