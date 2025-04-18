@@ -82,34 +82,54 @@
     }
 		
 		#controls {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
   position: absolute;
   bottom: 10px;
   left: 0;
-  padding: 0 10px;
-  box-sizing: border-box;
-	user-select: none;
-       -webkit-user-select: none;
-       -moz-user-select: none;
-       -ms-user-select: none;
+  width: 100%;
+  height: 100px;
+  pointer-events: none; /* Prevent accidental clicks outside buttons */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-.rectBtn {
-  flex: 1;
-  height: 50px;
-  margin: 0 5px;
+.control-btn {
+  position: absolute;
+  pointer-events: auto; /* Allow clicking the buttons */
   font-size: 24px;
   font-weight: bold;
   background-color: #444;
   color: white;
   border: none;
   border-radius: 10px;
-	user-select: none;
-       -webkit-user-select: none;
-       -moz-user-select: none;
-       -ms-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Customize size and position for each button */
+.left-btn {
+  left: 10px;
+  bottom: 10px;
+  width: 80px;
+  height: 80px;
+}
+
+.shrink-btn {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10px;
+  width: 60px;
+  height: 60px;
+}
+
+.right-btn {
+  right: 10px;
+  bottom: 10px;
+  width: 80px;
+  height: 80px;
 }
 
     #homeScreen {
@@ -271,10 +291,11 @@
   <div id="scoreBox">Score: 0</div>
 
   <div id="controls">
-  <button id="leftBtn" class="rectBtn">←</button>
-  <button id="shrinkBtn" class="rectBtn">o</button>
-  <button id="rightBtn" class="rectBtn">→</button>
+  <button id="leftBtn" class="control-btn left-btn">←</button>
+  <button id="shrinkBtn" class="control-btn shrink-btn">o</button>
+  <button id="rightBtn" class="control-btn right-btn">→</button>
   </div>
+  
   </div>
 
 
