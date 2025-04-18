@@ -552,11 +552,10 @@ canvas.style.top = `${offsetY}px`;
     }); // <-- Closing .then
 } // <-- Closing endGame function
 
-    
 
-function loadLeaderboard() {
+  function loadLeaderboard() {
   const dbRef = ref(db);
-  get(child(dbRef, "players")).then((snapshot) => {
+  get(child(dbRef, "scores")).then((snapshot) => {
     if (snapshot.exists()) {
       const players = snapshot.val();
 
@@ -567,7 +566,7 @@ function loadLeaderboard() {
 
       // Create leaderboard HTML
       let leaderboardHTML = `<h2>Top 5 Players</h2><ol>`;
-      sortedPlayers.forEach((player, index) => {
+      sortedPlayers.forEach((player) => {
         leaderboardHTML += `<li>${player.username} - ${player.highScore}</li>`;
       });
       leaderboardHTML += `</ol>`;
@@ -581,6 +580,9 @@ function loadLeaderboard() {
     console.error("Error fetching leaderboard:", error);
   });
 }
+
+// Call on page load
+window.addEventListener('load', loadLeaderboard);
 
 // Call on page load
 window.addEventListener('load', loadLeaderboard);
