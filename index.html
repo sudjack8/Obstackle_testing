@@ -608,9 +608,11 @@ scoresRef.once("value")
   .catch(error => {
     console.error("Error fetching leaderboard:", error);
   });
+  }
 
 // Call on page load
 window.addEventListener('load', loadLeaderboard);
+window.startGame = startGame;
 
     shrinkBtn.addEventListener('touchstart', e => { e.preventDefault(); shrink = true; });
     shrinkBtn.addEventListener('touchend', e => { e.preventDefault(); shrink = false; });
