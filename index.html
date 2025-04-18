@@ -492,13 +492,13 @@ canvas.style.top = `${offsetY}px`;
           }
         }
 
-        if (!obs.passed && obsY > circleY + radius + obstacleHeight) {
+        if (!obs.passed && obsY > circleY + radius) {
           obs.passed = true;
           score++;
           scoreBox.textContent = `Score: ${score}`;
           
           // Remove obstacles that are off-screen and already passed
-				obstacles	= obstacles.filter(obs => (obs.y + offsetY + obstacleHeight) <= circleY - radius || !obs.passed);
+				obstacles	= obstacles.filter(obs => (obs.y + offsetY + obstacleHeight) <= circleY - radius - obstacleHeight || !obs.passed);
           
         }
       }
