@@ -161,8 +161,37 @@
        -moz-user-select: none;
        -ms-user-select: none;
     }
+    
+    #homeScreen button {
+  padding: 14px 30px;
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #f0f0f0;
+  background: linear-gradient(145deg, #6c757d, #343a40);
+  border: 2px solid #9ea2a8;
+  border-radius: 10px;
+  box-shadow: inset 1px 1px 0 #ffffff55,
+              inset -1px -1px 0 #00000055,
+              4px 4px 8px #00000088;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
-    #homeScreen button, #gameOverScreen button {
+#homeScreen button:hover {
+  background: linear-gradient(145deg, #7a8288, #2c3035);
+  box-shadow: inset 2px 2px 4px #ffffff33,
+              inset -2px -2px 4px #00000066,
+              2px 2px 6px #000000aa;
+  transform: translateY(-2px);
+}
+
+#homeScreen button:active {
+  box-shadow: inset 1px 1px 2px #00000088;
+  transform: translateY(1px);
+}
+
+    #gameOverScreen button {
       padding: 12px 24px;
       margin-top: 20px;
       font-size: 18px;
