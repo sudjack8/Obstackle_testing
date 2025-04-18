@@ -97,7 +97,7 @@
 }
 
    .rectBtn {
-  width: 200px; /* Set desired width instead of flex */
+  width: 100px; /* Set desired width instead of flex */
   height: 50px;
   margin: 0 auto; /* Center horizontally */
   display: block; /* Needed with margin: auto to center block-level elements */
@@ -117,23 +117,43 @@
   position: relative; /* Needed for pseudo-element positioning */
 }
 
-#leftBtn::before,
-#rightBtn::before
- {
-  flex: 1;
+#leftBtn::before {
+  content: ''; /* ::before needs this to render */
+  display: block; /* Make it behave like a block element */
+  width: 150px; /* Set desired width */
   height: 50px;
-  margin: 0 5px;
+  margin-right: auto; /* Push it to the right */
   font-size: 24px;
   font-weight: bold;
   background-color: #444;
   color: white;
   border: none;
   border-radius: 10px;
-	user-select: none;
-       -webkit-user-select: none;
-       -moz-user-select: none;
-       -ms-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
+
+#rightBtn::before
+ {
+  content: ''; /* ::before needs this to render */
+  display: block; /* Make it behave like a block element */
+  width: 150px; /* Set desired width */
+  height: 50px;
+  margin-left: auto; /* Push it to the right */
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
 
     #homeScreen {
       position: absolute;
