@@ -29,7 +29,11 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   
-  const db = firebase.firestore();
+  import { getDatabase, ref, get, child } from "firebase/database";
+
+  const db = getDatabase();
+  
+  //const db = firebase.firestore();
   const database = firebase.database();
   
 </script>
@@ -199,6 +203,7 @@
   <!-- Your existing game.html content starts here -->
 	
   <div id="homeScreen">
+    <div id="leaderboard"></div>
     <h1>Obstackle</h1>
     <button onclick="startGame()">Start Game</button>
   </div>
@@ -546,6 +551,39 @@ canvas.style.top = `${offsetY}px`;
       gameOverScreen.style.display = "flex";
     }); // <-- Closing .then
 } // <-- Closing endGame function
+
+    
+
+function loadLeaderboard() {
+  const dbRef = ref(db);
+  get(child(dbRef, "players")).then((snapshot) => {
+    if (snapshot.exists()) {
+      const players = snapshot.val();
+
+      // Convert to array and sort by highScore descending
+      const sortedPlayers = Object.values(players)
+        .sort((a, b) => b.highScore - a.highScore)
+        .slice(0, 5); // top 5
+
+      // Create leaderboard HTML
+      let leaderboardHTML = `<h2>Top 5 Players</h2><ol>`;
+      sortedPlayers.forEach((player, index) => {
+        leaderboardHTML += `<li>${player.username} - ${player.highScore}</li>`;
+      });
+      leaderboardHTML += `</ol>`;
+
+      // Insert into page
+      document.getElementById("leaderboard").innerHTML = leaderboardHTML;
+    } else {
+      document.getElementById("leaderboard").innerHTML = "<p>No players yet.</p>";
+    }
+  }).catch((error) => {
+    console.error("Error fetching leaderboard:", error);
+  });
+}
+
+// Call on page load
+window.addEventListener('load', loadLeaderboard);
 
     shrinkBtn.addEventListener('touchstart', e => { e.preventDefault(); shrink = true; });
     shrinkBtn.addEventListener('touchend', e => { e.preventDefault(); shrink = false; });
