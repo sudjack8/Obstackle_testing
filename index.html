@@ -492,7 +492,7 @@ canvas.style.top = `${offsetY}px`;
           }
         }
 
-        if (!obs.passed && obsY > circleY + radius) {
+        if (!obs.passed && obsY > circleY + radius + obstacleHeight) {
           obs.passed = true;
           score++;
           scoreBox.textContent = `Score: ${score}`;
