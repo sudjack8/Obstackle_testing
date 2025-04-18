@@ -82,54 +82,44 @@
     }
 		
 		#controls {
-  position: absolute;
-  bottom: 10px;
+  position: fixed;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 100px;
-  pointer-events: none; /* Prevent accidental clicks outside buttons */
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+  background: transparent;
+  pointer-events: none;
 }
 
 .control-btn {
-  position: absolute;
-  pointer-events: auto; /* Allow clicking the buttons */
+  height: 100%;
+  border: none;
   font-size: 24px;
   font-weight: bold;
   background-color: #444;
   color: white;
-  border: none;
+  pointer-events: auto;
+}
+
+#leftBtn {
+  width: 35%;
+  border-radius: 0 10px 10px 0;
+}
+
+#shrinkBtn {
+  width: 30%;
   border-radius: 10px;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  margin: 0 2.5%;
 }
 
-/* Customize size and position for each button */
-.left-btn {
-  left: 10px;
-  bottom: 10px;
-  width: 80px;
-  height: 80px;
-}
-
-.shrink-btn {
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 10px;
-  width: 60px;
-  height: 60px;
-}
-
-.right-btn {
-  right: 10px;
-  bottom: 10px;
-  width: 80px;
-  height: 80px;
+#rightBtn {
+  width: 35%;
+  border-radius: 10px 0 0 10px;
 }
 
     #homeScreen {
@@ -290,11 +280,11 @@
 
   <div id="scoreBox">Score: 0</div>
 
-  <div id="controls">
-  <button id="leftBtn" class="control-btn left-btn">←</button>
-  <button id="shrinkBtn" class="control-btn shrink-btn">o</button>
-  <button id="rightBtn" class="control-btn right-btn">→</button>
-  </div>
+ <div id="controls">
+  <button id="leftBtn" class="control-btn">←</button>
+  <button id="shrinkBtn" class="control-btn">o</button>
+  <button id="rightBtn" class="control-btn">→</button>
+</div>
   
   </div>
 
