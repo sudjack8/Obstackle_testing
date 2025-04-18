@@ -1,23 +1,42 @@
 <!DOCTYPE html>
-<html>
-  <head> 
-
-    <!-- Firebase App (the core Firebase SDK) -->
+<html lang="en">
+<head>
+	
+	<!-- Firebase App (the core Firebase SDK) -->
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 
 <!-- Firebase Authentication SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 
 <!-- Firebase Firestore SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script> -->
 
 
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-  
-    <meta charset="UTF-8" />
-    <title>Firebase Google Sign-In</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
+<script>
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+  apiKey: "AIzaSyBBLIK0EnQDP4GFRtSGsFJcyyEd06-bEdc",
+  authDomain: "obstackle-test.firebaseapp.com",
+  databaseURL: "https://obstackle-test-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "obstackle-test",
+  storageBucket: "obstackle-test.firebasestorage.app",
+  messagingSenderId: "483914204227",
+  appId: "1:483914204227:web:1f4c6b314261ba37abc0f6"
+};
+  
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  const db = firebase.firestore();
+  const database = firebase.database();
+  
+</script>
+	
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Obstackle by Impossib1e</title>
   <style>
     html, body {
       margin: 0;
@@ -161,18 +180,25 @@
       -ms-user-select: none;
     }
   </style>
-  
-  </head>
-    
-  <body>
-  <div id="login-screen">
-    <h2>Firebase Google Sign-In</h2>
+</head>
+<body>
+	
+	<!-- Auth Container -->
+<div id="auth-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: Arial, sans-serif;">
+
+ <h2>Firebase Google Sign-In</h2>
     <button id="sign-in">Sign In with Google</button>
     <button id="sign-out" hidden>Sign Out</button>
     <p id="user-info"></p>
-  </div>
+    
+</div>
 
-    <div id="homeScreen">
+	
+<!-- Game Container -->
+<div id="game-container" style="display: none;">
+  <!-- Your existing game.html content starts here -->
+	
+  <div id="homeScreen">
     <h1>Obstackle</h1>
     <button onclick="startGame()">Start Game</button>
   </div>
@@ -252,7 +278,9 @@ canvas.style.top = `${offsetY}px`;
     let width = canvas.width;
     let height = canvas.height * 0.9;
 
-  function initializeGame() {
+
+
+    function initializeGame() {
       circleX = width / 2;
       initialRadius = width * 0.1;
       radius = initialRadius;
@@ -527,37 +555,10 @@ canvas.style.top = `${offsetY}px`;
     rightBtn.addEventListener('touchend', e => { e.preventDefault(); moveRight = false; });
   </script>
 	
-	<script>
-  function toggleAuth() {
-    const loginBox = document.getElementById('login-box');
-    const signupBox = document.getElementById('signup-box');
+ <script>
 
-    if (loginBox.style.display === 'none') {
-      loginBox.style.display = 'block';
-      signupBox.style.display = 'none';
-    } else {
-      loginBox.style.display = 'none';
-      signupBox.style.display = 'block';
-    }
-  }
-</script>
-	
-	<script>
-  document.getElementById('show-signup').addEventListener('click', function (e) {
-    e.preventDefault();
-    document.getElementById('login-box').style.display = 'none';
-    document.getElementById('signup-box').style.display = 'block';
-  });
-
-  document.getElementById('show-login').addEventListener('click', function (e) {
-    e.preventDefault();
-    document.getElementById('signup-box').style.display = 'none';
-    document.getElementById('login-box').style.display = 'block';
-  });
-</script>
-
-
-
+  // SIGN UP FUNCTION
+  function login() {
     <script type="module">
       // Firebase SDK v9.6.10
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
@@ -584,11 +585,6 @@ canvas.style.top = `${offsetY}px`;
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
-      provider.addScope('email');
-      provider.addScope('profile');
-      const db = firebase.firestore();
-      const database = firebase.database();
-      
 
       const signInBtn = document.getElementById("sign-in");
       const signOutBtn = document.getElementById("sign-out");
@@ -598,15 +594,6 @@ canvas.style.top = `${offsetY}px`;
         try {
           const result = await signInWithPopup(auth, provider);
           const user = result.user;
-          onAuthStateChanged(auth, (user) => {
-          if (user) {
-           goHome();
-          console.log("Display Name:", user.displayName);
-          console.log("Email:", user.email);
-          console.log("UID:", user.uid);
-          console.log("Photo URL:", user.photoURL);
-  }
-});
           console.log("Signed in as:", user.displayName);
         } catch (error) {
           console.error("Sign-in error:", error);
@@ -628,8 +615,15 @@ canvas.style.top = `${offsetY}px`;
           signOutBtn.hidden = true;
         }
       });
+    
+
+  // Show Game Screen and hide auth screen
+  function showGameScreen() {
+    document.getElementById("auth-container").style.display = "none";
+    document.getElementById("game-container").style.display = "block";
+  }
 
   
-    </script>
-  </body>
-</html>
+</script>
+
+</body>
