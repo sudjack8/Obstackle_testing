@@ -498,7 +498,7 @@ canvas.style.top = `${offsetY}px`;
           scoreBox.textContent = `Score: ${score}`;
           
           // Remove obstacles that are off-screen and already passed
-				obstacles	= obstacles.filter(obs => (obs.y) <= circleY - radius - obstacleHeight || !obs.passed);
+				obstacles	= obstacles.filter(obs => (obs.y + offsetY) <= circleY - radius - obstacleHeight || !obs.passed);
           
         }
       }
