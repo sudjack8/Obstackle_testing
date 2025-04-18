@@ -81,40 +81,47 @@
        -ms-user-select: none;
     }
 		
-	#controls {
+		#controls {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  width: 100%;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  padding: 0 10px;
+  box-sizing: border-box;
+	user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
 }
 
-.buttonWrapper {
+.touch-wrapper {
   position: relative;
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end; /* aligns button at the bottom of wrapper */
-  height: 90px; /* Increased clickable area */
-  margin: 0 5px;
+  display: inline-block;
+  padding: 20px; /* Expands hit area */
+  margin: -20px; /* Keeps visual spacing unchanged */
 }
 
-#shrinkBtn {
-  flex: 1;
-  margin: 0 5px;
+.touch-wrapper button {
+  position: relative;
+  z-index: 1;
 }
 
-/* Keep this shared button style */
 .rectBtn {
+  flex: 1;
   height: 50px;
+  margin: 0 5px;
   font-size: 24px;
   font-weight: bold;
   background-color: #444;
   color: white;
   border: none;
   border-radius: 10px;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+	user-select: none;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
 }
 
     #homeScreen {
@@ -276,9 +283,9 @@
   <div id="scoreBox">Score: 0</div>
 
   <div id="controls">
-  <div class="buttonWrapper"><button id="leftBtn" class="rectBtn">←</button></div>
+  <button class="touch-wrapper" id="leftBtn" class="rectBtn">←</button>
   <button id="shrinkBtn" class="rectBtn">o</button>
-  <div class="buttonWrapper"><button id="rightBtn" class="rectBtn">→</button></div>
+  <button class="touch-wrapper" id="rightBtn" class="rectBtn">→</button>
   </div>
   </div>
 
