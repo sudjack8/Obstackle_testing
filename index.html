@@ -344,7 +344,11 @@ canvas.style.top = `${offsetY}px`;
     let width = canvas.width;
     let height = canvas.height * 0.9;
 
-
+    function vibrateTouch() {
+    if (navigator.vibrate) {
+      navigator.vibrate(50); // vibrate for 50ms
+    }
+  }
 
     function initializeGame() {
       circleX = width / 2;
@@ -656,11 +660,14 @@ scoresRef.once("value")
 window.addEventListener('load', loadLeaderboard);
 window.startGame = startGame;
 
-    shrinkBtn.addEventListener('touchstart', e => { e.preventDefault(); shrink = true; });
+    shrinkBtn.addEventListener('touchstart', e => { vibrateTouch();
+ e.preventDefault(); shrink = true; });
     shrinkBtn.addEventListener('touchend', e => { e.preventDefault(); shrink = false; });
-    leftBtn.addEventListener('touchstart', e => { e.preventDefault(); moveLeft = true; });
+    leftBtn.addEventListener('touchstart', e => { vibrateTouch();
+ e.preventDefault(); moveLeft = true; });
     leftBtn.addEventListener('touchend', e => { e.preventDefault(); moveLeft = false; });
-    rightBtn.addEventListener('touchstart', e => { e.preventDefault(); moveRight = true; });
+    rightBtn.addEventListener('touchstart', e => { vibrateTouch();
+ e.preventDefault(); moveRight = true; });
     rightBtn.addEventListener('touchend', e => { e.preventDefault(); moveRight = false; });
   </script>
 	
