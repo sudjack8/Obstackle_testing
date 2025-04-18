@@ -96,21 +96,21 @@
        -ms-user-select: none;
 }
 
-
-.rectBtn {
-  flex: 1;
+   .rectBtn {
+  width: 200px; /* Set desired width instead of flex */
   height: 50px;
-  margin: 0 5px;
+  margin: 0 auto; /* Center horizontally */
+  display: block; /* Needed with margin: auto to center block-level elements */
   font-size: 24px;
   font-weight: bold;
   background-color: #444;
   color: white;
   border: none;
   border-radius: 10px;
-	user-select: none;
-       -webkit-user-select: none;
-       -moz-user-select: none;
-       -ms-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 #leftBtn, #rightBtn {
