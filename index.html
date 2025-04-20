@@ -427,24 +427,12 @@ canvas.style.top = `${offsetY}px`;
       const maxWidth = width / 2;
       const obsWidth = Math.random() * (maxWidth - minWidth) + minWidth;
 
-      if (score <= 350)
-      {
       obstacles.push({
         x: side === 'left' ? 0 : width - obsWidth,
         y: y,
         width: obsWidth,
         height: obstacleHeight
       });
-      }
-      else
-      {
-        obstacles.push({
-        x: side === 'left' ? 0 : width - obsWidth,
-        y: y,
-        width: obsWidth,
-        height: obstacleHeight / 2
-      });
-        }
     }
 
     function update() {
