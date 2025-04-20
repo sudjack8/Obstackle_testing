@@ -385,6 +385,7 @@ canvas.style.top = `${offsetY}px`;
 
       lastSpawnTime = Date.now();
       spawnInterval = 400;
+      spawnInterval2 = 350;
     }
 
     function startGame() {
@@ -506,7 +507,7 @@ if (score <= 350)
       if (moveRight) circleX += moveSpeed;
       if (circleX - radius < 0) circleX = radius;
       if (circleX + radius > width) circleX = width - radius;
-   if (score < 300)
+   if (score < 250)
     {
       const now = Date.now();
       if (now - lastSpawnTime >= spawnInterval) {
@@ -517,7 +518,7 @@ if (score <= 350)
     }
       else
       {const now = Date.now();
-      if (now - lastSpawnTime >= spawnInterval) {
+      if (now - lastSpawnTime >= spawnInterval2) {
         generateObstacle(newobs);
         newobs -= spaceBetweenObstacles;
         lastSpawnTime = now;
