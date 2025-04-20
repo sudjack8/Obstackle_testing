@@ -17,13 +17,13 @@
 <script>
   // Your web app's Firebase configuration
   const firebaseConfig = {
-  apiKey: "AIzaSyBBLIK0EnQDP4GFRtSGsFJcyyEd06-bEdc",
-  authDomain: "obstackle-test.firebaseapp.com",
-  databaseURL: "https://obstackle-test-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "obstackle-test",
-  storageBucket: "obstackle-test.firebasestorage.app",
-  messagingSenderId: "483914204227",
-  appId: "1:483914204227:web:1f4c6b314261ba37abc0f6"
+  apiKey: "AIzaSyA8L3gVXfw63UtpIHWLJOdqXxrMGM0lSZg",
+  authDomain: "obstackledb.firebaseapp.com",
+  databaseURL: "https://obstackledb-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "obstackledb",
+  storageBucket: "obstackledb.firebasestorage.app",
+  messagingSenderId: "741143724512",
+  appId: "1:741143724512:web:d99efe0e8ec107f289eb85"
 };
   
   // Initialize Firebase
@@ -385,7 +385,6 @@ canvas.style.top = `${offsetY}px`;
 
       lastSpawnTime = Date.now();
       spawnInterval = 400;
-      spawnInterval2 = 350;
     }
 
     function startGame() {
@@ -426,13 +425,24 @@ canvas.style.top = `${offsetY}px`;
       const minWidth = width / 4;
       const maxWidth = width / 2;
       const obsWidth = Math.random() * (maxWidth - minWidth) + minWidth;
-
+if (score <= 350)
+{
       obstacles.push({
         x: side === 'left' ? 0 : width - obsWidth,
         y: y,
         width: obsWidth,
         height: obstacleHeight
       });
+    }
+      else
+      {
+        obstacles.push({
+  x: side === 'left' ? 0 : width - obsWidth,
+  y: y,
+  width: obsWidth,
+  height: obstacleHeight / 2
+});
+      }
     }
 
     function update() {
@@ -447,37 +457,48 @@ canvas.style.top = `${offsetY}px`;
         if (score < 50) {
           radius -= shrinkSpeed;
           if (radius <= initialRadius) endGame("You shrank too much!");
-        } else if (score < 100) {
+        } 
+        else if (score < 100) {
           radius -= shrinkSpeed2;
           if (radius < initialRadius) radius = initialRadius;
-        } 
+        }
         
-        else if (score < 200) {
-          radius -= shrinkSpeed2;
-          
-					const threefourthradius = width * 0.1 * 0.75;
-  if (minAllowedRadius > threefourthradius) {
-    minAllowedRadius -= addRad;
-    if (minAllowedRadius < threefourthradius) minAllowedRadius = threefourthradius;
-  }
+        else if (score < 200)
+        {
+         radius -= shrinkSpeed2;
+  
+         const 3fourthrad = width * 0.1 * 0.5;
+         if (minAllowedRadius > 3fourthrad) {
+             minAllowedRadius -= addRad;
+          if (minAllowedRadius < 3fourthrad) minAllowedRadius = 3fourthrad;
+          }
+  
+          initialRadius -= shrinkSpeed2;
+          if (radius < minAllowedRadius) {
+           radius = minAllowedRadius;
+           initialRadius = minAllowedRadius;
+          }
+        }
         
-				else {
+				else 
+				{
           radius -= shrinkSpeed2;
           
 					const halfIntRad = width * 0.1 * 0.5;
-  if (minAllowedRadius > halfIntRad) {
-    minAllowedRadius -= addRad;
-    if (minAllowedRadius < halfIntRad) minAllowedRadius = halfIntRad;
-  }
-
-  initialRadius -= shrinkSpeed2;
-  if (radius < minAllowedRadius) {
-    radius = minAllowedRadius;
-    initialRadius = minAllowedRadius;
-  }
-}
+            if (minAllowedRadius > halfIntRad) {
+             minAllowedRadius -= addRad;
+              if (minAllowedRadius < halfIntRad) minAllowedRadius = halfIntRad;
+                }
+                
+            initialRadius -= shrinkSpeed2;
+              if (radius < minAllowedRadius) {
+                 radius = minAllowedRadius;
+                 initialRadius = minAllowedRadius;
+                }
+        }
 					
-      } else {
+      } 
+      else {
         radius += growSpeed;
       }
 
@@ -485,25 +506,25 @@ canvas.style.top = `${offsetY}px`;
       if (moveRight) circleX += moveSpeed;
       if (circleX - radius < 0) circleX = radius;
       if (circleX + radius > width) circleX = width - radius;
-
+   if (score < 300)
+    {
       const now = Date.now();
-      
-      if (score <= 250)
-      {
       if (now - lastSpawnTime >= spawnInterval) {
         generateObstacle(newobs);
         newobs -= spaceBetweenObstacles;
         lastSpawnTime = now;
       }
-      }
+    }
       else
-      {
-      if (now - lastSpawnTime >= spawnInterval2) {
+      {const now = Date.now();
+      if (now - lastSpawnTime >= spawnInterval) {
         generateObstacle(newobs);
         newobs -= spaceBetweenObstacles;
         lastSpawnTime = now;
+        }
+        
       }
-      }
+      
 
       const circleY = height - radius * 1.4 - 20;
       for (let obs of obstacles) {
@@ -739,4 +760,4 @@ window.startGame = startGame;
 </script>
  
 
-</body>
+</body>   
