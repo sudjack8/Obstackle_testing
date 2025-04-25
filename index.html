@@ -389,6 +389,8 @@ canvas.style.top = `${offsetY}px`;
       score = 0;
       newobs = 0;
       gameRunning = true;
+      initialSpeed = 2;
+      lastUpdateTime = 0;
 
       lastSpawnTime = 0;
       spawnInterval = 1500;
@@ -405,7 +407,6 @@ canvas.style.top = `${offsetY}px`;
         // Start the loop with requestAnimationFrame
       requestAnimationFrame(loop);
    }
-    }
 
     function restartGame() {
       gameOverScreen.style.display = "none";
@@ -462,6 +463,7 @@ if (score <= 350)
       speed += speedIncrement * deltaTime * 60;
       offsetY += speed * deltaTime * 60;
       const currentSpacing = height * baseSpacingRatio;
+      const currentSpawnInterval = spawnInterval * (initialSpeed / speed);
 
       if (shrink) {
         if (score < 50) {
