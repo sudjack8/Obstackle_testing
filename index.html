@@ -312,6 +312,7 @@
     const finalScore = document.getElementById('finalScore');
     const highestScore = document.getElementById('highestScore');
     const gameOverMessage = document.getElementById('gameOverMessage');
+    const baseSpacingRatio = 1/3;
 		
 
     let circleX, initialRadius, radius;
@@ -389,9 +390,9 @@ canvas.style.top = `${offsetY}px`;
       newobs = 0;
       gameRunning = true;
 
-      lastSpawnTime = Date.now();
-      spawnInterval = 400;
-      spawnInterval2 = 350;
+      lastSpawnTime = 0;
+      spawnInterval = 1500;
+      spawnInterval2 = 1300;
     }
 
     function startGame() {
@@ -400,10 +401,10 @@ canvas.style.top = `${offsetY}px`;
       document.getElementById('controls').style.display = "flex";
       scoreBox.style.display = "block";
       gameOverScreen.style.display = "none";
-      initializeGame();
-			
-		
-      loop();
+      initializeGame();	
+        // Start the loop with requestAnimationFrame
+      requestAnimationFrame(loop);
+   }
     }
 
     function restartGame() {
@@ -452,35 +453,37 @@ if (score <= 350)
       }
     }
 
-    function update() {
+    function update(deltaTime) {
       if (!gameRunning) return;
 
       const intRad = width * 0.1;
-      worldY += scrollSpeed;
-      speed += speedIncrement;
-      offsetY += speed;
+      //Update based on time instead of frames
+      worldY += scrollSpeed * deltaTime * 60; // Multiply by 60 to maintain similar feel to 60fps
+      speed += speedIncrement * deltaTime * 60;
+      offsetY += speed * deltaTime * 60;
+      const currentSpacing = height * baseSpacingRatio;
 
       if (shrink) {
         if (score < 50) {
-          radius -= shrinkSpeed;
+          radius -= shrinkSpeed * deltaTime * 60;
           if (radius <= initialRadius) endGame("You shrank too much!");
         } 
         else if (score < 100) {
-          radius -= shrinkSpeed2;
+          radius -= shrinkSpeed2 * deltaTime * 60;
           if (radius < initialRadius) radius = initialRadius;
         }
         
         else if (score < 200)
         {
-         radius -= shrinkSpeed2;
+         radius -= shrinkSpeed2 * deltaTime * 60;
   
          const threefourthrad = width * 0.1 * 0.75;
          if (minAllowedRadius > threefourthrad) {
-             minAllowedRadius -= addRad;
+             minAllowedRadius -= addRad * deltaTime * 60;
           if (minAllowedRadius < threefourthrad) minAllowedRadius = threefourthrad;
           }
   
-          initialRadius -= shrinkSpeed2;
+          initialRadius -= shrinkSpeed2 * deltaTime * 60;
           if (radius < minAllowedRadius) {
            radius = minAllowedRadius;
            initialRadius = minAllowedRadius;
@@ -489,15 +492,15 @@ if (score <= 350)
         
 				else 
 				{
-          radius -= shrinkSpeed2;
+          radius -= shrinkSpeed2 * deltaTime * 60;
           
 					const halfIntRad = width * 0.1 * 0.5;
             if (minAllowedRadius > halfIntRad) {
-             minAllowedRadius -= addRad;
+             minAllowedRadius -= addRad * deltaTime * 60;
               if (minAllowedRadius < halfIntRad) minAllowedRadius = halfIntRad;
                 }
                 
-            initialRadius -= shrinkSpeed2;
+            initialRadius -= shrinkSpeed2 * deltaTime * 60;
               if (radius < minAllowedRadius) {
                  radius = minAllowedRadius;
                  initialRadius = minAllowedRadius;
@@ -506,30 +509,37 @@ if (score <= 350)
 					
       } 
       else {
-        radius += growSpeed;
+        radius += growSpeed * deltaTime * 60;
       }
 
-      if (moveLeft) circleX -= moveSpeed;
-      if (moveRight) circleX += moveSpeed;
+      if (moveLeft) circleX -= moveSpeed * deltaTime * 60;
+      if (moveRight) circleX += moveSpeed * deltaTime * 60;
       if (circleX - radius < 0) circleX = radius;
       if (circleX + radius > width) circleX = width - radius;
-   if (score < 250)
+
+      if (score < 250)
     {
       const now = Date.now();
-      if (now - lastSpawnTime >= spawnInterval) {
+      if (now - lastSpawnTime >= currentSpawnInterval) {
         generateObstacle(newobs);
-        newobs -= spaceBetweenObstacles;
+        newobs -= currentSpacing;
         lastSpawnTime = now;
       }
     }
       else
-      {const now = Date.now();
-      if (now - lastSpawnTime >= spawnInterval2) {
-        generateObstacle(newobs);
-        newobs -= spaceBetweenObstacles;
-        lastSpawnTime = now;
-        }
-        
+      {
+       // For scores over 250, you might want to cap the minimum interval
+    // or use a slightly different calculation
+    const minInterval = 400; // Don't go faster than this
+    const now = Date.now();
+    const highScoreInterval = Math.max(minInterval, currentSpawnInterval * 0.9); // 10% faster
+    
+    if (now - lastSpawnTime >= highScoreInterval) {
+      generateObstacle(newobs);
+      newobs -= spaceBetweenObstacles;
+      lastSpawnTime = now; 
+      }
+      
       }
       
 
@@ -594,11 +604,21 @@ if (score <= 350)
       ctx.closePath();
     }
 
-    function loop() {
-      scoreBox.textContent = `Score: ${score}`;
-      update();
-      draw();
-      if (gameRunning) requestAnimationFrame(loop);
+    function loop(currentTime) {
+      if (!gameRunning) return;
+  
+  // Convert time to seconds and calculate delta
+  currentTime = currentTime || 0;
+  deltaTime = (currentTime - lastUpdateTime) / 1000; // Convert to seconds
+  
+  // Cap delta time to prevent huge jumps if browser tab was inactive
+  if (deltaTime > 0.1) deltaTime = 0.1;
+  
+  lastUpdateTime = currentTime;
+  
+  update(deltaTime);
+  draw();
+  requestAnimationFrame(loop);
     }
     
    function saveScore(score) {
