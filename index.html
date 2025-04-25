@@ -248,6 +248,12 @@
       -moz-user-select: none;
       -ms-user-select: none;
     }
+
+   .control-btn.active {
+    background-color: #666;
+    transform: scale(0.95);
+   }
+	  
   </style>
 </head>
 <body>
@@ -719,6 +725,43 @@ window.startGame = startGame;
     rightBtn.addEventListener('touchstart', e => { vibrateTouch();
  e.preventDefault(); moveRight = true; });
     rightBtn.addEventListener('touchend', e => { e.preventDefault(); moveRight = false; });
+
+// Add these keyboard event listeners
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') {
+    moveLeft = true;
+    // Simulate button press visual effect if desired
+    leftBtn.classList.add('active');
+  }
+  if (e.key === 'ArrowRight') {
+    moveRight = true;
+    // Simulate button press visual effect if desired
+    rightBtn.classList.add('active');
+  }
+  if (e.key === 'ArrowDown') {
+    shrink = true;
+    // Simulate button press visual effect if desired
+    shrinkBtn.classList.add('active');
+  }
+});
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowLeft') {
+    moveLeft = false;
+    // Remove visual effect
+    leftBtn.classList.remove('active');
+  }
+  if (e.key === 'ArrowRight') {
+    moveRight = false;
+    // Remove visual effect
+    rightBtn.classList.remove('active');
+  }
+  if (e.key === 'ArrowDown') {
+    shrink = false;
+    // Remove visual effect
+    shrinkBtn.classList.remove('active');
+  }
+});
+	  
   </script>
 	
 <script>
