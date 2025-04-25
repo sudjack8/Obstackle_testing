@@ -761,6 +761,18 @@ document.addEventListener('keyup', (e) => {
     shrinkBtn.classList.remove('active');
   }
 });
+
+ document.addEventListener('keydown', (e) => {
+  // Enter key for retry when game over screen is visible
+  if (e.key === 'Enter' && gameOverScreen.style.display === 'flex') {
+    restartGame();
+  }
+  
+  // Escape key for home when game is running or game over screen is visible
+  if (e.key === 'Escape' && (gameRunning || gameOverScreen.style.display === 'flex')) {
+    goHome();
+  }
+});
 	  
   </script>
 	
